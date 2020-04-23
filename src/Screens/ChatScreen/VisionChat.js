@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
-import{View, Text, Image,} from 'react-native';
+import{View} from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat';
 
-import {dialogflowConfig} from '../Service/BotService'
+import {dialogflowConfig} from '../../Service/BotService'
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 
-const BOT_USER ={
-    _id: 2,
-    name :'VISION',
-    avatar: 'https://i.imgur.com/7k12EPD.png'
-}
 
 export default class Vision extends Component{
 
-componentDidMount(){
+componentDidMount(){ //gọi dialogflow api
     Dialogflow_V2.setConfiguration(
         dialogflowConfig.client_email,
         dialogflowConfig.private_key,
@@ -25,16 +20,17 @@ componentDidMount(){
 constructor(props){
     super(props);
     this.state = {
-        messages: [
+        messages: [ 
             {
-                _id: 1, 
-                text : 'Hi! I am a Vision .\n\Can I help you?',
+                id: 1, 
                 createdAt: new Date(),
                 user: BOT_USER
-            }
+            },
         ]
     }
 };
+
+    
    
     onSend(messages = []){
         this.setState(previousState => ({
@@ -71,7 +67,7 @@ constructor(props){
                     messages = {this.state.messages}
                     onSend = {messages => this.onSend(messages)}
                     user = {{
-                        _id: 1
+                        id: 1
                     }}
                 />
             </View>

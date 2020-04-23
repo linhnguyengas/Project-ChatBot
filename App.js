@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import Vision from './src/ChatScreen/VisionChat';
-import Login from './src/LoginScreen/Login';
+import Navigations from './src/Navigations/Navigations';
+import SelectScreen from './src/Screens/SelectChat/SelectScreen';
 class App extends Component {
     render() {
         return (
-            <Login/>
+            <Navigations/>
         );
     }
 }

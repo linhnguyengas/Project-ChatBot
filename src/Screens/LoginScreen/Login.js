@@ -1,20 +1,21 @@
-import React, { Component } from 'react'
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
-class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  };
+import React,{Component} from 'react'
+import {StyleSheet, View, Text, TouchableOpacity, SafeAreaView} from 'react-native'
+
+export class SelectScreen extends Component {
+    render(){
+           return (
+        
+        <SafeAreaView style = {style.container}>
+            <Text style = {style.logo}>HeyAPP</Text>
+            <TouchableOpacity style = {style.loginBtn}
+                onPress ={() => this.props.navigation.navigate('SelectChat')}
+            >
+                <Text style = {style.loginText}>LOGIN</Text>
+            </TouchableOpacity>
+        </SafeAreaView>    
+    );
     }
-    render() {
-        return (
-            <View style = {style.container}>
-                <Text style = {style.logo}>HeyAPP</Text>
-                <TouchableOpacity style = {style.loginBtn}>
-                    <Text style = {style.loginText}>LOGIN</Text>
-                </TouchableOpacity>
-            </View>        
-        );
-    }
+ 
 }
 
 const style = StyleSheet.create({
@@ -45,4 +46,4 @@ const style = StyleSheet.create({
     }
 });
 
-export default Login;
+export default SelectScreen;
