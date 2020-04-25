@@ -1,37 +1,45 @@
 import React, { Component } from 'react';
-import{View} from 'react-native';
+import{View, YellowBox} from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat';
 
 import {dialogflowConfig} from '../../Service/BotService'
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 
+YellowBox.ignoreWarnings([
+    'Warning: componentWillReceiveProps has been renamed',
+    'Warning: componentWillMount has been renamed'
+
+])
 
 export default class Vision extends Component{
 
-componentDidMount(){ //gọi dialogflow api
-    Dialogflow_V2.setConfiguration(
-        dialogflowConfig.client_email,
-        dialogflowConfig.private_key,
-        Dialogflow_V2.LANG_ENGLISH_US,
-        dialogflowConfig.project_id
-    );
-}
-
-constructor(props){
-    super(props);
-    this.state = {
-        messages: [ 
-            {
-                id: 1, 
-                createdAt: new Date(),
-                user: BOT_USER
-            },
-        ]
+    componentDidMount(){ //gọi dialogflow api
+        Dialogflow_V2.setConfiguration(
+            dialogflowConfig.client_email,
+            dialogflowConfig.private_key,
+            Dialogflow_V2.LANG_ENGLISH_US,
+            dialogflowConfig.project_id
+        );
     }
-};
 
-    
-   
+    constructor(props){
+        super(props);
+        this.state = {
+            messages: [ 
+                {
+                    _id: 1, 
+                    text: this.props.route.params.text, //truyền data từ bot.json
+                    createdAt: new Date(),
+                    user: {
+                        _id: 2,
+                        name: this.props.route.params.name, //truyền data từ bot.json
+                        avatar:this.props.route.params.image //truyền data từ bot.json
+                    }
+                },
+            ]
+        }
+    };
+
     onSend(messages = []){
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, messages)
@@ -53,7 +61,11 @@ constructor(props){
             _id: this.state.messages.length + 1,
             text,
             createdAt: new Date(),
-            user : BOT_USER
+            user:{
+                _id: 2,
+                name: this.props.route.params.name, //truyền data từ bot.json
+                avatar:this.props.route.params.image //truyền data từ bot.json
+            }
         };
         this.setState(previousState => ({
             messages: GiftedChat.append(previousState.messages, [msg])
@@ -67,7 +79,7 @@ constructor(props){
                     messages = {this.state.messages}
                     onSend = {messages => this.onSend(messages)}
                     user = {{
-                        id: 1
+                        _id: 1
                     }}
                 />
             </View>

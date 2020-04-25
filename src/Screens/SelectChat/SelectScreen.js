@@ -7,7 +7,12 @@ import {
   Image,
   
   FlatList,
+  YellowBox,
 } from 'react-native';
+
+  YellowBox.ignoreWarnings([
+    'Failed child context type'
+  ])
 
 class SelectScreen extends Component {
     constructor(props) {
@@ -17,13 +22,13 @@ class SelectScreen extends Component {
          };
     }
     componentDidMount(){
-        const bot = require('./Bot.json').bot;
+        const bot = require('../../Service/Bot.json').bot;
         this.setState({bot});
     }
 
     renderItem = ({item}) => {
         return (
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Chat',item)}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Chat', item)}>
             <View style={styles.row}>
               <Image source={{ uri: item.image }} style={styles.pic} />
               <View>
@@ -45,9 +50,7 @@ class SelectScreen extends Component {
               <FlatList 
                 extraData={this.state}
                 data={this.state.bot}
-                keyExtractor = {(item) => {
-                  return item.id;
-                }}
+                keyExtractor = {(item) => item.id}
                 renderItem={this.renderItem}/>
             </View>
           );
