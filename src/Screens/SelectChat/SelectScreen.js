@@ -1,31 +1,53 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
-  
   FlatList,
   YellowBox,
+  BackHandler,
 } from 'react-native';
+import * as firebase from 'firebase'
 
+import CustomHeader from '../../Customheader/CustomHeader'
   YellowBox.ignoreWarnings([
     'Failed child context type'
   ])
-
+  
 class SelectScreen extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            Bot : []
+            Bot : [],
+         
          };
+     
     }
     componentDidMount(){
-        const bot = require('../../Service/Bot.json').bot;
-        this.setState({bot});
+        firebase.database().ref('heyapp').child('bot').once('value').then(snapshot =>{
+          console.log(snapshot.val())
+          const item =[];
+          snapshot.forEach((child) =>{
+            item.push({
+              id: child.val().key,
+              image: child.val().image,
+              name: child.val().name,
+              text: child.val().text
+            })
+          })
+          this.setState({Bot : item})
+        })
     }
-
+   
+    componentWillMount(){
+      BackHandler.addEventListener('hardwareBackPress', function(){
+          BackHandler.exitApp()
+        return false
+      })
+    }
+ 
     renderItem = ({item}) => {
         return (
           <TouchableOpacity onPress={() => this.props.navigation.navigate('Chat', item)}>
@@ -46,13 +68,16 @@ class SelectScreen extends Component {
 
     render() {
         return(
-            <View style={{ flex: 1 }} >
-              <FlatList 
-                extraData={this.state}
-                data={this.state.bot}
-                keyExtractor = {(item) => item.id}
-                renderItem={this.renderItem}/>
-            </View>
+              <View style={{ flex: 1 }} >
+                <CustomHeader title="Select Chat" navigation={this.props.navigation}/>
+                <FlatList 
+                  extraData={this.state}
+                  data={this.state.Bot}
+                  keyExtractor = {(item) => item.id}
+                  renderItem={this.renderItem}
+                 
+                  />
+              </View>
           );
     }
 }

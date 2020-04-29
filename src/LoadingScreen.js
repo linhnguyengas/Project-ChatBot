@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase';
-import { View,Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View,Text, StyleSheet, ActivityIndicator, BackHandler } from 'react-native';
 
 
 class LoadingScreen extends Component {
     componentDidMount(){
         firebase.auth().onAuthStateChanged(user => {
-            this.props.navigation.navigate(user ? "SelectChat" : "SignIn");
+            this.props.navigation.push(user ? "SelectChat" : "SignIn");
         })
     }
+
     render() {
         return (
             <View style = {style.container}>

@@ -1,8 +1,26 @@
-import React,{Component} from 'react'
-import {StyleSheet, View, Text,TextInput, TouchableOpacity, SafeAreaView} from 'react-native'
-
+import React,{Component} from 'react';
+import {StyleSheet, View, Text,TextInput, TouchableOpacity, SafeAreaView} from 'react-native';
+import * as firebase from 'firebase';
 
 export class SignIn extends Component {
+    state = {
+        email: '',
+        password: '',
+        name:'',
+        errorMessage: null
+    }
+
+    handleLogin = () =>{
+        const {email,password} = this.state
+
+        firebase
+        .auth()
+        .signInWithEmailAndPassword(email,password)
+        .catch(
+                error => this.setState({errorMessage: error.message})
+            )
+    }
+
     render(){
            return (
             <SafeAreaView style = {style.container}>
@@ -11,25 +29,29 @@ export class SignIn extends Component {
                     <TextInput style= {style.inputText}
                         placeholder='Email'
                         placeholderTextColor='#033f5c'
-                        onChangeText={text => this.setState({email: text})}
+                        onChangeText={email => this.setState({email})}
+                        value={this.state.email}
                     />   
                 </View>
                 <View style= {style.inputView}>
                     <TextInput style= {style.inputText}
                         placeholder='Password'
+                        secureTextEntry
                         placeholderTextColor='#033f5c'
-                        onChangeText={text => this.setState({password: text})}
+                        onChangeText={password => this.setState({password})}
+                        value={this.state.password}
                     />   
                 </View>
                 <View>
-                    <Text style = {style.errowMessage}>Error Message</Text>
+                    {this.state.errorMessage && <Text style = {style.errorMessage}>{this.state.errorMessage}</Text>}
                 </View>
                 <TouchableOpacity style = {style.signInBtn}
-                    onPress ={() => this.props.navigation.navigate('SelectChat')}
+                    // onPress ={() => this.props.navigation.navigate('SelectChat')
+                    onPress={this.handleLogin }
                 >
                     <Text style = {style.loginText}>SIGN IN</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style = {style.signInBtn}
+                <TouchableOpacity style={style.signUpBtn}
                     onPress ={() => this.props.navigation.navigate('SignUp')}
                 >
                     <Text style = {style.loginText}>SIGN UP</Text>
@@ -77,14 +99,14 @@ const style = StyleSheet.create({
         height: 50,
         color: 'white', 
     },
-    errowMessage: {
+    errorMessage: {
         fontSize: 12,
         color: "red",
         fontWeight: "bold"
     },
     signUpBtn: {
         alignItems: "center",
-        marginTop: 20
+        marginTop: 30
     }
 });
 

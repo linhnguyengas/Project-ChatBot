@@ -1,33 +1,75 @@
-import React,{Component} from 'react'
+import React,{Component, Children} from 'react'
 import {StyleSheet, View, Text,TextInput, TouchableOpacity, SafeAreaView} from 'react-native'
-
+import * as firebase from 'firebase'
 
 export class SignUp extends Component {
+
+    state = {
+        name: "",
+        email: "",
+        id:"",
+        password: "",
+        errorMessage: null
+    }
+
+    handleSignUp = () =>{
+        firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(userCredentials =>{
+            // tạo dữ liệu new user trong realtime database 
+            firebase.database().ref('heyapp/user').child(userCredentials.user.uid).set({
+                name : this.state.name,
+                email: this.state.email,
+                id : userCredentials.user.uid,
+                create_at: Date.now()
+            })
+           
+        })
+        .catch(error => this.setState({errorMessage: error.message}))
+    }
+
     render(){
            return (
             <SafeAreaView style = {style.container}>
-                <Text style = {style.logo}>HeyAPP</Text>
+                <Text style = {style.logo}>Register</Text>
+                <View style= {style.inputView}>
+                    <TextInput style= {style.inputText}
+                        placeholder='Full name'
+                        placeholderTextColor='#033f5c'
+                        onChangeText={name => this.setState({name})}
+                        value={this.state.name}
+                    />   
+                </View>
                 <View style= {style.inputView}>
                     <TextInput style= {style.inputText}
                         placeholder='Email'
                         placeholderTextColor='#033f5c'
-                        onChangeText={text => this.setState({email: text})}
+                        onChangeText={email => this.setState({email})}
+                        value={this.state.email}
                     />   
                 </View>
                 <View style= {style.inputView}>
                     <TextInput style= {style.inputText}
                         placeholder='Password'
+                        secureTextEntry
                         placeholderTextColor='#033f5c'
-                        onChangeText={text => this.setState({password: text})}
+                        onChangeText={password => this.setState({password})}
+                        value={this.state.password}
                     />   
                 </View>
                 <View>
-                    <Text style = {style.errowMessage}>Error Message</Text>
+                    {this.state.errorMessage && <Text style = {style.errorMessage}>{this.state.errorMessage}</Text>}
                 </View>
-                <TouchableOpacity style = {style.loginBtn}
-                    onPress ={() => this.props.navigation.navigate('SelectChat')}
+                <TouchableOpacity style = {style.signInBtn}
+                    onPress ={this.handleSignUp}
                 >
-                    <Text style = {style.loginText}>LOGIN</Text>
+                    <Text style = {style.loginText}>SIGN UP</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={style.backBtn}
+                    onPress ={() => this.props.navigation.navigate('SignIn')}
+                >
+                    <Text style = {style.loginText}>BACK</Text>
                 </TouchableOpacity>
             </SafeAreaView>    
         );
@@ -50,15 +92,14 @@ const style = StyleSheet.create({
     loginText : { 
         color : 'white'
     },
-    loginBtn : {
+    signInBtn : {
         width : '80%',
         backgroundColor : '#fb5b5a',
         borderRadius : 25,
         height : 50,
         alignItems : 'center',
         justifyContent : 'center',
-        marginTop : 40,
-        marginBottom : 10,
+        marginTop : 20,
     },
     inputView: {
         width: '80%',
@@ -73,10 +114,14 @@ const style = StyleSheet.create({
         height: 50,
         color: 'white', 
     },
-    errowMessage: {
+    errorMessage: {
         fontSize: 12,
         color: "red",
         fontWeight: "bold"
+    },
+    backBtn: {
+        alignItems: "center",
+        marginTop: 30
     }
 });
 
