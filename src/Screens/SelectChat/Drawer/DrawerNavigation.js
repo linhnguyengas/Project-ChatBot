@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {createDrawerNavigator} from '@react-navigation/drawer'
-import SelectScreen from '../../Screens/SelectChat/SelectScreen';
-import DrawerTab from '../Drawer/DrawerTab';
+import SelectScreen from '../SelectScreen';
+import DrawerTab from './DrawerTab';
 
 const Drawer = createDrawerNavigator();
 

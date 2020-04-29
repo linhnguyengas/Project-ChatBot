@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import {View, StyleSheet  } from 'react-native'
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer'
 import * as firebase from 'firebase'
-import { Drawer, Text, Avatar, Title } from 'react-native-paper'
+import { Drawer, Avatar, Title } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
 class DrawerTab extends Component {
     state ={
         email:"",
-        nam:""
+        name:""
     }
     componentDidMount(){
         const {email, name} = firebase.auth().currentUser;
@@ -48,7 +48,7 @@ class DrawerTab extends Component {
                             />
                         )}
                         label="Profile"
-                        onPress={() =>{}}
+                        onPress={() =>{this.props.navigation.navigate('ProfileScreen')}}
                         />
                     <DrawerItem 
                         icon = {({color,size}) => (

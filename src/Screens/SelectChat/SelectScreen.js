@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect} from 'react';
+import React, { Component} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,47 +7,39 @@ import {
   Image,
   FlatList,
   YellowBox,
-  BackHandler,
 } from 'react-native';
 import * as firebase from 'firebase'
 
 import CustomHeader from '../../Customheader/CustomHeader'
   YellowBox.ignoreWarnings([
-    'Failed child context type'
+    'Failed child context type',
+    'Setting a timer',
+    'Each child in a list'
   ])
   
 class SelectScreen extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            Bot : [],
-         
-         };
-     
-    }
-    componentDidMount(){
-        firebase.database().ref('heyapp').child('bot').once('value').then(snapshot =>{
-          console.log(snapshot.val())
-          const item =[];
-          snapshot.forEach((child) =>{
-            item.push({
-              id: child.val().key,
-              image: child.val().image,
-              name: child.val().name,
-              text: child.val().text
-            })
+          Bot : [],
+        };
+      
+      }
+  componentDidMount(){
+    firebase.database().ref('heyapp').child('bot').once('value').then(snapshot =>{
+        console.log(snapshot.val())
+      const item =[];
+        snapshot.forEach((child) =>{
+          item.push({
+            id: child.val().key,
+            image: child.val().image,
+            name: child.val().name,
+            text: child.val().text
           })
-          this.setState({Bot : item})
         })
-    }
-   
-    componentWillMount(){
-      BackHandler.addEventListener('hardwareBackPress', function(){
-          BackHandler.exitApp()
-        return false
+        this.setState({Bot : item})
       })
     }
- 
     renderItem = ({item}) => {
         return (
           <TouchableOpacity onPress={() => this.props.navigation.navigate('Chat', item)}>
@@ -65,21 +57,19 @@ class SelectScreen extends Component {
           </TouchableOpacity>
         );
       }
-
     render() {
         return(
-              <View style={{ flex: 1 }} >
-                <CustomHeader title="Select Chat" navigation={this.props.navigation}/>
-                <FlatList 
-                  extraData={this.state}
-                  data={this.state.Bot}
-                  keyExtractor = {(item) => item.id}
-                  renderItem={this.renderItem}
-                 
-                  />
-              </View>
-          );
-    }
+      <View style={{ flex: 1 }} >
+        <CustomHeader title="Select Chat" navigation={this.props.navigation}/>
+          <FlatList 
+            extraData={this.state}
+            data={this.state.Bot}
+            keyExtractor = {(item) => item.id}
+            renderItem={this.renderItem}   
+            />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -13,7 +13,7 @@ YellowBox.ignoreWarnings([
 
 export default class Vision extends Component{
 
-    componentDidMount(){ //gọi dialogflow api
+    componentDidMount(){ //gọi dialogflow api bot
         Dialogflow_V2.setConfiguration(
             dialogflowConfig.client_email,
             dialogflowConfig.private_key,
@@ -28,12 +28,12 @@ export default class Vision extends Component{
             messages: [ 
                 {
                     _id: 1, 
-                    text: this.props.route.params.text, //truyền data từ bot.json
+                    text: this.props.route.params.text, //truyền data từ realtime firebase
                     createdAt: new Date(),
                     user: {
                         _id: 2,
-                        name: this.props.route.params.name, //truyền data từ bot.json
-                        avatar:this.props.route.params.image //truyền data từ bot.json
+                        name: this.props.route.params.name, //truyền data từ realtime firebase
+                        avatar:this.props.route.params.image //truyền data từ realtime firebase
                     }
                 },
             ]
@@ -63,8 +63,8 @@ export default class Vision extends Component{
             createdAt: new Date(),
             user:{
                 _id: 2,
-                name: this.props.route.params.name, //truyền data từ bot.json
-                avatar:this.props.route.params.image //truyền data từ bot.json
+                name: this.props.route.params.name, //truyền data từ realtime firebase
+                avatar:this.props.route.params.image //truyền data từ realtime firebase
             }
         };
         this.setState(previousState => ({
