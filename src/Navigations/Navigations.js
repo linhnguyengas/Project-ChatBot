@@ -23,7 +23,7 @@ class Navigations extends Component {
                     <Stack.Screen options={{headerShown: false}} name="SignUp" component={SignUp}/>
                     <Stack.Screen options={{headerShown: false}} name="SelectChat" component={DrawerNavigation}/>
                     <Stack.Screen name="Chat" component={Chat}/>
-                    <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
+                    <Stack.Screen options={{title: "Profile", headerStyle: {shadowColor: 'transparent',elevation: 0,}, headerTitleAlign: "center"}} name="ProfileScreen" component={ProfileScreen}/>
                 </Stack.Navigator>
             </NavigationContainer>
         );
