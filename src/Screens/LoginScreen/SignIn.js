@@ -29,6 +29,7 @@ export class SignIn extends Component {
                     <TextInput style= {style.inputText}
                         placeholder='Email'
                         placeholderTextColor='#033f5c'
+                        autoCapitalize = 'none'
                         onChangeText={email => this.setState({email})}
                         value={this.state.email}
                     />   
@@ -38,6 +39,7 @@ export class SignIn extends Component {
                         placeholder='Password'
                         secureTextEntry
                         placeholderTextColor='#033f5c'
+                        autoCapitalize = 'none'
                         onChangeText={password => this.setState({password})}
                         value={this.state.password}
                     />   

@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   YellowBox,
+  SafeAreaView,
 } from 'react-native';
 import * as firebase from 'firebase'
 
@@ -16,6 +17,7 @@ import CustomHeader from '../../Customheader/CustomHeader'
     'Setting a timer',
     'Each child in a list'
   ])
+  
   
 class SelectScreen extends Component {
     constructor(props) {
@@ -27,14 +29,14 @@ class SelectScreen extends Component {
       }
   componentDidMount(){
     firebase.database().ref('heyapp').child('bot').once('value').then(snapshot =>{
-        console.log(snapshot.val())
       const item =[];
         snapshot.forEach((child) =>{
           item.push({
             id: child.val().key,
             image: child.val().image,
             name: child.val().name,
-            text: child.val().text
+            text: child.val().text,
+            status: child.val().status
           })
         })
         this.setState({Bot : item})
@@ -58,16 +60,19 @@ class SelectScreen extends Component {
         );
       }
     render() {
+      
         return(
-      <View style={{ flex: 1 }} >
-        <CustomHeader title="Select Chat" navigation={this.props.navigation}/>
-          <FlatList 
-            extraData={this.state}
-            data={this.state.Bot}
-            keyExtractor = {(item) => item.id}
-            renderItem={this.renderItem}   
-            />
-      </View>
+        <SafeAreaView style={{flex: 1}}>
+        <View style={{ flex: 1 }} >
+          <CustomHeader title="Select Chat" navigation={this.props.navigation}/>
+            <FlatList 
+              extraData={this.state}
+              data={this.state.Bot}
+              keyExtractor = {(item) => item.id}
+              renderItem={this.renderItem}   
+              />
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -77,7 +82,6 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       borderColor: '#DCDCDC',
-      backgroundColor: '#fff',
       borderBottomWidth: 1,
       padding: 10,
     },

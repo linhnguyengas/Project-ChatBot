@@ -1,26 +1,38 @@
 import React, { Component } from 'react'
-import {View, StyleSheet  } from 'react-native'
-import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer'
+import {View, StyleSheet, Text  } from 'react-native'
+import {DrawerContentScrollView, DrawerItem,} from '@react-navigation/drawer'
 import * as firebase from 'firebase'
-import { Drawer, Avatar, Title } from 'react-native-paper'
+import { Drawer, Avatar, Title, Caption } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+if (Platform.OS === 'ios') {
+   MaterialCommunityIcons.loadFont()
+}
 
 class DrawerTab extends Component {
     state ={
         email:"",
-        name:""
-    }
-    componentDidMount(){
-        const {email, name} = firebase.auth().currentUser;
-        this.setState({email, name});
-
-     
+        displayName:"",
+        photoURL: ""
     }
     signOutUser= () => {
         firebase.auth().signOut();
     }
     render() {
+        var user = firebase.auth().currentUser // show console to check status profile user logged
+        if (user != null) { 
+            user.providerData.forEach(function (profile) {
+              console.log("Sign-in provider: " + profile.providerId);
+              console.log("  Provider-specific UID: " + profile.uid);
+              console.log("  Name: " + profile.displayName);
+              console.log("  Email: " + profile.email);
+              console.log("  Photo URL: " + profile.photoURL);
+            });
+          }  
+        this.state = {
+            displayName: firebase.auth().currentUser.displayName,
+            email : firebase.auth().currentUser.email
+        }
         return (
             <View style={{flex: 1}}>
                 <DrawerContentScrollView>
@@ -28,11 +40,12 @@ class DrawerTab extends Component {
                         <View style={style.userInfoSection}>
                             <View style={{flexDirection: "row"}}>
                                 <Avatar.Image
-                                    source={{uri: null}}
+                                    source={require('../../Images/interface.png')}
                                     size={50}
                                 />
-                                <View style={{flexDirection: "row", marginLeft: 15}}>
-                                    <Title style={style.title}>{this.state.name}</Title>
+                                <View style={{marginLeft: 15}}>
+                                    <Title style={style.title}>{this.state.displayName}</Title>
+                                    <Caption style={style.caption}>{this.state.email}</Caption>
                                 </View>
                             </View>
                         </View>
@@ -59,7 +72,7 @@ class DrawerTab extends Component {
                             />
                         )}
                         label="Setting"
-                        onPress={() =>{}}
+                        onPress={() =>{this.props.navigation.navigate('SettingScreen')}}
                         />
                     <DrawerItem 
                         icon = {({color,size}) => (
@@ -73,7 +86,6 @@ class DrawerTab extends Component {
                         onPress={() =>{}}
                         />
                 </Drawer.Section>
-
                 </DrawerContentScrollView>
                    <Drawer.Section style={style.bottomDrawerSection}>
                     <DrawerItem 
@@ -101,13 +113,13 @@ const style = StyleSheet.create({
         paddingTop: 5
     },
     title:{
-        fontSize: 14,
+        fontSize: 16,
         marginTop: 3,
         fontWeight: "bold"
     },
     caption:{
-        fontSize: 14,
-        lineHeight: 14
+        fontSize: 12,
+        lineHeight: 12
     },
     row:{
         marginTop: 20,
@@ -131,12 +143,6 @@ const style = StyleSheet.create({
         borderTopColor: '#f4f4f4',
         borderTopWidth: 1
     },
-    preference:{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingVertical: 12,
-        paddingHorizontal: 16
-    }
 })
 
 export default DrawerTab;

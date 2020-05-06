@@ -5,46 +5,62 @@ import * as firebase from 'firebase'
 export class SignUp extends Component {
 
     state = {
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        id:"",
+        //id:"",
         password: "",
         errorMessage: null
     }
-
-    handleSignUp = () =>{
-        firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then(userCredentials =>{
-            // tạo dữ liệu new user trong realtime database 
-            firebase.database().ref('heyapp/user').child(userCredentials.user.uid).set({
-                name : this.state.name,
-                email: this.state.email,
-                id : userCredentials.user.uid,
-                create_at: Date.now()
+    
+        handleSignUp = ()  =>{
+            firebase
+            .auth()
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then(userCredentials =>{
+                // tạo dữ liệu new user trong realtime database 
+                firebase.database().ref('heyapp/user').child(userCredentials.user.uid).set({
+                    firstName : this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                    password: this.state.password,
+                    id : userCredentials.user.uid,
+                    create_at: Date.now()
+                })   
+               return userCredentials.user.updateProfile({
+                    displayName: this.state.firstName +" "+ this.state.lastName
+                })
             })
-           
-        })
-        .catch(error => this.setState({errorMessage: error.message}))
-    }
+            .catch(error => this.setState({errorMessage: error.message}))
+    
+        }
 
     render(){
+   
            return (
             <SafeAreaView style = {style.container}>
                 <Text style = {style.logo}>Register</Text>
                 <View style= {style.inputView}>
                     <TextInput style= {style.inputText}
-                        placeholder='Full name'
+                        placeholder='First Name'
                         placeholderTextColor='#033f5c'
-                        onChangeText={name => this.setState({name})}
-                        value={this.state.name}
+                        onChangeText={firstName => this.setState({firstName})}
+                        value={this.state.firstName}
+                    />   
+                </View>
+                <View style= {style.inputView}>
+                    <TextInput style= {style.inputText}
+                        placeholder='Last Name'
+                        placeholderTextColor='#033f5c'
+                        onChangeText={lastName => this.setState({lastName})}
+                        value={this.state.lastName}
                     />   
                 </View>
                 <View style= {style.inputView}>
                     <TextInput style= {style.inputText}
                         placeholder='Email'
                         placeholderTextColor='#033f5c'
+                        autoCapitalize = 'none'
                         onChangeText={email => this.setState({email})}
                         value={this.state.email}
                     />   
@@ -54,6 +70,7 @@ export class SignUp extends Component {
                         placeholder='Password'
                         secureTextEntry
                         placeholderTextColor='#033f5c'
+                        autoCapitalize = 'none'
                         onChangeText={password => this.setState({password})}
                         value={this.state.password}
                     />   
