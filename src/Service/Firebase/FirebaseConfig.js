@@ -1,5 +1,4 @@
 
-import * as firebase from 'firebase'
 export var firebaseConfig = {
   apiKey: "AIzaSyChM0ijDS5wBwx-M6ANFHw5oOWSbsF5Piw",
   authDomain: "fag-bot-soqsgl.firebaseapp.com",

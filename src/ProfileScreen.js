@@ -12,7 +12,6 @@ class ProfileScreen extends Component {
             <SafeAreaView style = {{flex: 1}}>
                 <View>
                     <CustomHeader title="Profile" isHome={true} navigation={this.props.navigation}/>
-
                 </View>
             </SafeAreaView>
         );
