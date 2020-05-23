@@ -1,16 +1,18 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Navigation from './src/Navigation/Navigation';
-import {AppearanceProvider, useColorScheme} from 'react-native-appearance'
+// import {AppearanceProvider, useColorScheme} from 'react-native-appearance'
+// import {View} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import {
-  Provider as PaperProvider,
-  DarkTheme as PaperDarkTheme,
-  DefaultTheme as PaperLightTheme,
+  ThemeProvider
+
 } from 'react-native-paper';
 import {
   NavigationContainer,
-  DefaultTheme as NavigationLightTheme,
-  DarkTheme as NavigationDarkTheme,
+
 } from '@react-navigation/native';
+import { EventRegister } from 'react-native-event-listeners'
+import Themes from './src/Themes'
 
 import {AuthContext} from './src/Service/AuthContext/AuthContext';
 import {LocalizationProvider} from './src/Service/Localization/LocalizationContext';
@@ -21,49 +23,38 @@ let firebaseCall = require('./src/Service/Firebase/FirebaseConfig')
 
 firebase.initializeApp(firebaseCall);
 
+const KEY_APP = 'dark'
+
 const App = () => {
-  const [isDarkTheme, setIsDarkTheme] = React.useState();
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
   const authContext = React.useMemo(() => ({
     toggleTheme: () => {
       setIsDarkTheme(isDarkTheme => !isDarkTheme);
     },
   }));
+  
+ 
 
-  const CustomLightTheme = {
-    ...NavigationLightTheme,
-    ...PaperLightTheme,
-    colors: {
-      ...NavigationLightTheme.colors,
-      ...PaperLightTheme.colors,
-    },
-  };
-
-  const CustomDarkTheme = {
-    ...NavigationDarkTheme,
-    ...PaperDarkTheme,
-    colors: {
-      ...NavigationDarkTheme.colors,
-      ...PaperDarkTheme.colors,
-      background: '#636e72',
-      text: '#dfe6e9',
-    },
-  };
-  const theme = isDarkTheme ? CustomDarkTheme : CustomLightTheme;
-  const scheme = useColorScheme()
+  const theme = isDarkTheme ? Themes.customDarkTheme : Themes.customLightTheme;
+  //const scheme = useColorScheme()
 
   return (
-    <AppearanceProvider theme={scheme ? CustomDarkTheme : CustomLightTheme}>
-      <PaperProvider theme={theme}>
+   
+      <ThemeProvider theme={theme}>
       <AuthContext.Provider value={authContext}>
         <LocalizationProvider>
-          <NavigationContainer theme={theme}>
+       
+          <NavigationContainer theme={theme}> 
             <Navigation />
+            
           </NavigationContainer>
+        
+          
         </LocalizationProvider>
       </AuthContext.Provider>
-    </PaperProvider>
-    </AppearanceProvider>
+    </ThemeProvider>
+  
   );
 };
 

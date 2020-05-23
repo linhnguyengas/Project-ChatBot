@@ -55,7 +55,7 @@ class SelectScreen extends Component {
   renderItem = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('Chat', item)}>
+        onPress={() => this.props.navigation.navigate('Chat', item/*Param router*/)}>
         <View style={styles.row}>
           <Image source={{uri: item.image}} style={styles.pic} />
           <View>

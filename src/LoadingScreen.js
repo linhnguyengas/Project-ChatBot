@@ -10,26 +10,21 @@ import {
 } from 'react-native';
 import {LocalizationContext} from './Service/Localization/LocalizationContext';
 function LoadingScreen({navigation}) {
-  // loading check language
+  // loading language
   const {initializeAppLanguage} = React.useContext(LocalizationContext);
 
-  React.useEffect(() => {
-    initializeAppLanguage();
-    const timer = setTimeout(() => {
-      navigation.navigate('SelectChat');
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [navigation, initializeAppLanguage]);
-
-  // check login or not login
+  // check login or not login and loading default language
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
+      initializeAppLanguage();
       navigation.replace('SelectChat');
     } else {
       if (Platform.OS === 'ios') {
+        initializeAppLanguage();
         navigation.replace('SignIn');
       }
       if (Platform.OS === 'android') {
+        initializeAppLanguage();
         navigation.navigate('SignIn');
         BackHandler.addEventListener('hardwareBackPress', function() {
           BackHandler.exitApp();

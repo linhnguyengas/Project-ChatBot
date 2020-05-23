@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {Switch, TouchableRipple, useTheme} from 'react-native-paper';
 import {AsyncStorage} from '@react-native-community/async-storage'
-
+import { EventRegister } from 'react-native-event-listeners'
 import {AuthContext} from '../../Service/AuthContext/AuthContext';
 
 export default function DarkMode() {
@@ -20,7 +20,13 @@ export default function DarkMode() {
       <View style={style.preference}>
         <Text style={style.textMode}>Dark Mode</Text>
         <View pointerEvents="none">
-          <Switch value={paperTheme.dark} />
+          <Switch value={paperTheme.dark} 
+          onValueChange={
+            val => {
+              setIsDarkTheme(val)
+              EventRegister.emit('myCustomEvent', val)
+            }}
+          />
         </View>
       </View>
     </TouchableRipple>

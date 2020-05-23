@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import * as firebase from 'firebase';
 import {Drawer, Avatar, Title, Caption} from 'react-native-paper';
@@ -10,59 +10,66 @@ if (Platform.OS === 'ios') {
 }
 
 import {LocalizationContext} from '../../Service/Localization/LocalizationContext.js';
+  
 
 class DrawerTab extends Component {
-  state = {
-    email: '',
-    displayName: '',
-    photoURL: '',
-  };
+ 
   signOutUser = () => {
     firebase.auth().signOut();
   };
-  render() {
-    var user = firebase.auth().currentUser;// lấy dữ liệu của user từ firebase
-    if (user != null) {// show console to check status profile user logged
+  render () {
+    var user = firebase.auth().currentUser; // lấy dữ liệu của user từ firebase
+    if (user != null) {
+      // show console to check status profile user logged
       user.providerData.forEach(function(profile) {
         console.log('Sign-in provider: ' + profile.providerId);
         console.log('  Provider-specific UID: ' + profile.uid);
         console.log('  Name: ' + profile.displayName);
         console.log('  Email: ' + profile.email);
         console.log('  Photo URL: ' + profile.photoURL);
+        console.log('  Phone: ' + profile.phoneNumber);
+
       });
     }
-    this.state = { // lấy dữ liệu của user từ firebase
-      displayName: firebase.auth().currentUser.displayName,
-      email: firebase.auth().currentUser.email,
-    };
+ 
+   
+      this.state = {
+        // lấy dữ liệu của user từ firebase
+        item: [
+          {
+            displayName: user.displayName,
+            email: user.email,
+          },
+        ],
+      };
+    
     return (
       <Translate
-        displayName={this.state.displayName}
-        email={this.state.email}
         signOutUser={this.signOutUser}
         navigation={this.props.navigation}
+        item={this.state.item[0]}
       />
     );
   }
 }
 
-function Translate({navigation, displayName, email, signOutUser}) {
+function Translate({navigation, signOutUser, item}) {
   const {translation} = React.useContext(LocalizationContext);
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView>
         <View style={style.drawerContent}>
           <View style={style.userInfoSection}>
-            <View style={{flexDirection: 'row'}}>
-              <Avatar.Image
-                source={require('../../Images/interface.png')}
-                size={50}
-              />
-              <View style={{marginLeft: 15}}>
-                <Title style={style.title}>{displayName}</Title>
-                <Caption style={style.caption}>{email}</Caption>
+              <View style={{flexDirection: 'row'}}>
+                <Avatar.Image
+                  source={require('../../Images/interface.png')}
+                  size={50}
+                />
+                <View style={{marginLeft: 15}}>
+                  <Title style={style.title}>{item.displayName}</Title>
+                  <Caption style={style.caption}>{item.email}</Caption>
+                </View>
               </View>
-            </View>
           </View>
         </View>
 
@@ -73,7 +80,7 @@ function Translate({navigation, displayName, email, signOutUser}) {
             )}
             label={translation.PROFILE}
             onPress={() => {
-              navigation.navigate('ProfileScreen');
+              navigation.navigate('ProfileScreen', item);
             }}
           />
           <DrawerItem
