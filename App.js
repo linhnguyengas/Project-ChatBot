@@ -23,14 +23,16 @@ let firebaseCall = require('./src/Service/Firebase/FirebaseConfig')
 
 firebase.initializeApp(firebaseCall);
 
-const KEY_APP = 'dark'
+const KEY = 'settheme';
 
 const App = () => {
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+ 
+  const [isDarkTheme, setIsDarkTheme] = React.useState();
 
   const authContext = React.useMemo(() => ({
     toggleTheme: () => {
       setIsDarkTheme(isDarkTheme => !isDarkTheme);
+   
     },
   }));
   
